@@ -1,61 +1,68 @@
-# Web Peminjaman Ruangan: BookMySpace
+Web Peminjaman Ruangan: Capstone-Project-Kelompok-2-PPSI
+How to use
+Clone repository
 
-## How to use
+bash
+Copy code
+git clone https://github.com/najlandv/Capstone-Project-Kelompok-2-PPSI.git
+Masuk ke folder project
 
-1. **Clone repository**
+bash
+Copy code
+cd Capstone-Project-Kelompok-2-PPSI
+Install node modules
 
-   ```bash
-   git clone https://github.com/NaufalAD13/Tugas-Besar-PWEB-B-11.git
-   ```
+bash
+Copy code
+npm install
+Isi variabel .env sesuai database, jwt secret code, dan pusher api key yang dimiliki
 
-2. **Cd ke folder project**
+bash
+Copy code
+ DB_HOST = localhost
+ DB_NAME = ""
+ DB_USERNAME = ""
+ DB_PASSWORD = ""
+ DB_CONNECTION = "mysql"
+ PORT = 3000
+ NODE_ENV = "development"
 
-   ```bash
-   cd Tugas-Besar-PWEB-B-11
-   ```
+ JWT_SECRET = 
+ JWT_COOKIE_EXPIRES_IN = 3600
+ JWT_EXPIRES_IN = "60m"
 
-3. **Install node modules**
+ PUSHER_APP_ID=
+ PUSHER_APP_KEY=
+ PUSHER_APP_SECRET=
+ PUSHER_APP_CLUSTER=
+Lakukan migrasi tabel dari Express ke database
 
-   ```bash
-   npm install
-   ```
+bash
+Copy code
+npx sequelize-cli db:migrate
+Jalankan seeder untuk mengirim data ke database
 
-4. **Isi variabel .env sesuai database, jwt secret code, dan pusher api key yang dimiliki**
+bash
+Copy code
+npx sequelize-cli db:seed:all
+Jalankan Express di terminal
 
-   ```bash
-    DB_HOST = localhost
-    DB_NAME = ""
-    DB_USERNAME = ""
-    DB_PASSWORD = ""
-    DB_CONNECTION = ""
-    PORT = 
-    NODE_ENV = ""
+bash
+Copy code
+npm run dev # untuk menjalankan Express
+Opsional: Jalankan proses build untuk CSS (jika menggunakan Tailwind)
 
-    JWT_SECRET = 
-    JWT_COOKIE_EXPIRES_IN = 
-    JWT_EXPIRES_IN = 
+bash
+Copy code
+npm run build # untuk menjalankan Tailwind
 
-    PUSHER_APP_ID=
-    PUSHER_APP_KEY=
-    PUSHER_APP_SECRET=
-    PUSHER_APP_CLUSTER=
-   ```
 
-5. **Lakukan migrasi tabel dari express ke database**
+Tentang Proyek
+Proyek ini merupakan hasil kerja kelompok dalam mata kuliah Pengembangan Perangkat Sistem Informasi (PPSI). Sistem ini dirancang untuk mempermudah proses peminjaman ruangan dengan fitur-fitur seperti autentikasi, manajemen pengguna, dan antarmuka yang responsif.
 
-   ```bash
-   npx sequelize-cli db:migrate
-   ```
-
-6. **Jalankan seeder untuk mengirim data ke database**
-
-   ```bash
-   npx sequelize-cli db:seed:all
-   ```
-
-7. **Jalankan Express dan tailwind di 2 terminal berbeda dengan perintah**
-
-   ```bash
-   npm run dev # untuk menjalankan express
-   npm run build # untuk menjalankan tailwind
-   ```
+Teknologi yang Digunakan
+Backend: Node.js, Express.js
+Frontend: EJS, CSS, Tailwind (opsional)
+Database: MySQL dengan Sequelize ORM
+Autentikasi: JSON Web Token (JWT)
+Notifikasi Real-Time: Pusher
