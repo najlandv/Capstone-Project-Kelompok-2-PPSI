@@ -35,9 +35,11 @@ const tambahRuanganForm = async (req, res, next) => {
     try {
         const userId = req.user.idUser;
         const user = await User.findOne({ where: { idUser: userId } });
+        const message = req.cookies.message ? JSON.parse(req.cookies.message) : null;
+    
         const flash = req.cookies.flash;
         res.clearCookie('flash');
-        res.render('admin/tambah-ruangan', { currentPage: 'tambah-ruangan', user, flash });  
+        res.render('admin/tambah-ruangan', { currentPage: 'tambah-ruangan', user, flash ,message});  
     } catch (error) {
         console.error(error.message);
         res.status(500).send(`Server Error: ${error.message}`);
@@ -49,7 +51,13 @@ const tambahRuangan = async (req, res, next) => {
     const foto = req.file;
 
     if (!namaRuangan || !lokasi || !kapasitas || !fasilitas) {
-        res.cookie('flash', { type: 'error', message: 'Semua fields harus diisi' });
+        res.cookie('message', JSON.stringify({ type: 'error', text: 'Semua field wajib diisi' }), { maxAge: 1000 });
+        
+        return res.redirect('/admin/tambah-ruangan');
+    }
+
+    if (isNaN(kapasitas)) {
+        res.cookie('message', JSON.stringify({ type: 'error', text: 'Kapasitas harus berupa angka' }), { maxAge: 1000 });
         return res.redirect('/admin/tambah-ruangan');
     }
 
@@ -104,7 +112,7 @@ const editRuanganForm = async (req, res, next) => {
         const user = await User.findOne({ where: { idUser: userId } });
         const { idRuangan } = req.params;
         const ruangan = await Ruangan.findOne({ where: { idRuangan } });
-        
+        console.log(ruangan.foto,">>>>>>>>>>>>>>");
         if (!ruangan) {
             return res.status(404).json({ message: 'Ruangan not found' });
         }
@@ -117,51 +125,53 @@ const editRuanganForm = async (req, res, next) => {
 
 const editRuangan = async (req, res, next) => {
     const { idRuangan } = req.params;
-    console.log(`idRuangan: ${idRuangan}`);
 
-    const namaRuangan = req.body.namaRuangan;
-    const lokasi = req.body.lokasi;
-    const kapasitas = req.body.kapasitas;
-    const fasilitas = req.body.fasilitas;
-    const foto = req.file ? req.file.filename : null;
-
-    if(!foto) {
-        res.cookie('flash', {type: 'error', message: 'Gambar harus diupload'});
-        return res.redirect(`/admin/edit-ruangan/${idRuangan}`);
-    }
-
-    const imageFileName = foto;
-    const pathImageFile = `uploads/${imageFileName}`;
-    console.log(pathImageFile);
+    // Ambil data dari form
+    const { namaRuangan, lokasi, kapasitas, fasilitas, fotoLama } = req.body;
+    const fotoBaru = req.file ? req.file.filename : null; // Ambil file baru jika ada
 
     try {
-        if(!namaRuangan || !lokasi || !kapasitas || !fasilitas || !foto) {
-            res.cookie('flash', {type: 'error', message: 'Semua fields harus diisi'});
+        // Validasi input
+        if (!namaRuangan || !lokasi || !kapasitas || !fasilitas) {
+            res.cookie('flash', { type: 'error', message: 'Semua fields harus diisi' });
             return res.redirect(`/admin/edit-ruangan/${idRuangan}`);
         }
 
+        // Cari ruangan berdasarkan ID
         const ruangan = await Ruangan.findOne({ where: { idRuangan } });
 
         if (!ruangan) {
-            res.cookie('flash', {type: 'error', message: 'Ruangan not found'});
+            res.cookie('flash', { type: 'error', message: 'Ruangan tidak ditemukan' });
             return res.redirect(`/admin/edit-ruangan/${idRuangan}`);
         }
 
+        // Gunakan gambar baru jika ada, jika tidak gunakan gambar lama
+        const fotoFinal = fotoBaru || fotoLama;
+
+        if (!fotoFinal) {
+            res.cookie('flash', { type: 'error', message: 'Gambar harus diupload' });
+            return res.redirect(`/admin/edit-ruangan/${idRuangan}`);
+        }
+
+        // Perbarui data ruangan
         ruangan.namaRuangan = namaRuangan;
         ruangan.lokasi = lokasi;
         ruangan.kapasitas = kapasitas;
         ruangan.fasilitas = fasilitas;
-        ruangan.foto = foto;
+        ruangan.foto = fotoFinal;
 
         await ruangan.save();
 
-        res.cookie('flash', {type: 'success', message: 'Ruangan updated successfully'});
+        // Kirim respon sukses
+        res.cookie('flash', { type: 'success', message: 'Ruangan berhasil diupdate' });
         return res.redirect('/admin/daftar-ruangan');
     } catch (error) {
-        res.cookie('flash', {type: 'error', message: 'Ruangan gagal diupdate'});
+        console.error('Error updating ruangan:', error);
+        res.cookie('flash', { type: 'error', message: 'Ruangan gagal diupdate' });
         return res.redirect(`/admin/edit-ruangan/${idRuangan}`);
     }
-}
+};
+
 
 
 const hapusRuangan = async (req, res, next) => {

@@ -6,12 +6,12 @@ module.exports = {
       idNotifikasi: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4
+        type: Sequelize.INTEGER,  // Change to INTEGER for auto-increment
+        autoIncrement: true    
       },
       idUser: {
         allowNull: false,
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,  // Change to INTEGER for auto-increment
         references: {
           model: "Users",
           key: "idUser"

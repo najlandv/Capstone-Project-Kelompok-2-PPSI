@@ -1,5 +1,5 @@
 'use strict';
-const { Model, DataTypes } = require('sequelize');
+const { Model, DataTypes, INTEGER } = require('sequelize');
 
 module.exports = (sequelize) => {
   class Ruangan extends Model {
@@ -11,7 +11,8 @@ module.exports = (sequelize) => {
     idRuangan: {
       type: DataTypes.UUID,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+      type: INTEGER, 
+      autoIncrement: true,
     },
     namaRuangan: {
       type: DataTypes.STRING,
@@ -22,7 +23,7 @@ module.exports = (sequelize) => {
       allowNull: false
     },
     kapasitas: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     fasilitas: {

@@ -1,5 +1,8 @@
-const { User, Role } = require('../models');
+const e = require('express');
+const { sequelize, User, Role } = require('../models');  // Import sequelize and models
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');  // Make sure to include bcrypt
+
 
 const loginForm = (req, res) => {
     let message = null;
@@ -32,8 +35,10 @@ const loginUser = async (req, res) => {
         }
 
         const userData = await User.findOne({ where: { username: req.body.username } })
-
+        console.log(userData);
+        
         if (!userData || !(await userData.CorrectPassword(req.body.password, userData.password))) {
+            
             res.cookie('message', JSON.stringify({type: 'error', text: 'Username atau password salah'}), {maxAge: 60000});
             return res.redirect('/auth/login');
         }
@@ -60,7 +65,11 @@ const loginUser = async (req, res) => {
 
 
     } catch (error) {
-        res.cookie('message', JSON.stringify({type: 'error', text: 'Internal Server Error'}), {maxAge: 60000});
+        // Extract error message and stack trace
+        const errorMessage = error.message || 'An error occurred';
+        const errorStack = error.stack || '';
+
+        res.cookie('message', JSON.stringify({type: 'error', text: errorMessage, stack: errorStack}), {maxAge: 60000});
         return res.redirect('/auth/login');
     }
 
@@ -78,8 +87,65 @@ const logoutUser = async (req, res) => {
     })
 }
 
+const registerForm = (req, res) => {
+    // Check for any messages passed in cookies
+    const message = req.cookies.message ? JSON.parse(req.cookies.message) : null;
+    
+    res.cookie('message', '', { maxAge: 1000, httpOnly: true });
+
+    // Render the registration page and pass the message
+    res.render('register', { message });
+}
+
+
+const registerUser = async (req, res) => {
+    try {
+        const { username, password,confirmPassword, nama, gender, noHp } = req.body;
+
+        if (!username || !password || !nama || !gender || !noHp) {
+            res.cookie('message', JSON.stringify({ type: 'error', text: 'Semua field wajib diisi' }), { maxAge: 60000 });
+            return res.redirect('/auth/register');
+        }
+
+        if (password !== confirmPassword) {
+            res.cookie('message', JSON.stringify({ type: 'error', text: 'Password tidak sama' }), { maxAge: 60000 });
+            return res.redirect('/auth/register');
+        }   
+
+        const userRole = await sequelize.models.Role.findOne({ where: { namaRole: 'user' } });
+
+        if (!userRole) {
+            console.error();
+            res.cookie('message', JSON.stringify({ type: 'error', text: 'Role pengguna tidak ditemukan' }), { maxAge: 60000 });
+            return res.redirect('/auth/register');
+        }
+
+
+        const user = await User.create({
+            username,
+            password,
+            nama,
+            gender,
+            noHp,
+            idRole: "1"
+        });
+        console.log(user);
+        
+        
+        res.cookie('message', JSON.stringify({ type: 'success', text: 'Registrasi berhasil! Silahkan login' }), { maxAge: 60000 });
+        return res.redirect('/auth/login');
+    } catch (error) {
+        console.error('Error occurred during registration:', error);
+        res.cookie('message', JSON.stringify({ type: 'error', text: 'Internal Server Error' }), { maxAge: 60000 });
+        return res.json({ message: error.message });
+    }
+};
+
+
 module.exports = {
     loginForm,
     loginUser,
     logoutUser,
+    registerForm,
+    registerUser
 }

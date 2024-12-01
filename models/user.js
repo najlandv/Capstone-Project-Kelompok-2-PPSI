@@ -1,6 +1,7 @@
 'use strict';
 const {
-  Model
+  Model,
+  INTEGER
 } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const role = require('./role');
@@ -20,12 +21,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.init({
     idUser: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: INTEGER, 
+      autoIncrement: true,
       primaryKey: true,
     },
     idRole: {
-      type: DataTypes.UUID,
+      type: INTEGER,
       allowNull: false,
     },
     nama: {
@@ -57,7 +58,9 @@ module.exports = (sequelize, DataTypes) => {
           user.password = bcrypt.hashSync(user.password, salt)
         }
         if (!user.roleId) {
-          const roleUser = await sequelize.models.Role.findOne({ where: { role: 'user' } })
+          const roleUser = await sequelize.models.Role.findOne({ where: { namaRole: 'user' } })
+          console.log(roleUser);
+          
           user.roleId = roleUser.id
         }
       }

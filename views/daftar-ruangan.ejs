@@ -9,7 +9,7 @@
   <div class="flex flex-col gap-3 sm:gap-6">
     <% ruangans.forEach((ruangan) => { %>
     <div
-      class="group flex flex-col bg-blue-800 border shadow-sm rounded-xl hover:shadow-md transition white:bg-neutral-900 dark:border-neutral-800"
+      class="group flex flex-col bg-[#1B6C89] border shadow-sm rounded-xl hover:shadow-md transition white:bg-neutral-900 dark:border-neutral-800"
     >
       <div class="p-4 md:p-5">
         <div class="flex justify-between items-center">
@@ -20,7 +20,7 @@
           <div class="flex space-x-2">
             <button
               type="button"
-              class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-white text-blue-600 hover:bg-blue-600 hover:text-white disabled:opacity-50 disabled:pointer-events-none"
+              class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-white bg-[#0a2e3b] hover:bg-[#0a2e3b] hover:text-white disabled:opacity-50 disabled:pointer-events-none"
               data-hs-overlay="#hs-subscription-with-image"
               onclick="window.location.href='/detail-ruangan/<%= ruangan.idRuangan %>'"
             >
@@ -28,7 +28,7 @@
             </button>
             <button
               type="button"
-              class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-white text-blue-600 hover:bg-blue-600 hover:text-white disabled:opacity-50 disabled:pointer-events-none"
+              class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-white bg-[#0a2e3b] hover:bg-[#0a2e3b] hover:text-white disabled:opacity-50 disabled:pointer-events-none"
               onclick="window.location.href='/pinjam-ruangan';"
             >
               Pinjam
@@ -101,7 +101,7 @@
         <div class="mt-6 flex justify-end gap-x-4">
           <button
             type="button"
-            class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-white text-blue-600 hover:bg-blue-600 hover:text-white disabled:opacity-50 disabled:pointer-events-none"
+            class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-white bg-[#0a2e3b] hover:bg-[#0a2e3b] hover:text-white disabled:opacity-50 disabled:pointer-events-none"
             onclick="window.location.href='peminjaman';"
           >
             Pinjam

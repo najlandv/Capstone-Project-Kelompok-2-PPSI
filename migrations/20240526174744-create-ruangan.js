@@ -6,8 +6,8 @@ module.exports = {
       idRuangan: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4
+        type: Sequelize.INTEGER,  // Change to INTEGER for auto-increment
+        autoIncrement: true    
       },
       namaRuangan: {
         type: Sequelize.STRING,

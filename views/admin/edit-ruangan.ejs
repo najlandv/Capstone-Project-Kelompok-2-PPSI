@@ -22,107 +22,131 @@
                 <div
                   class="mt-5 p-4 relative z-10 bg-white border rounded-xl sm:mt-10 md:p-10 white:bg-neutral-900 dark:border-neutral-700"
                 >
-                  <form
-                    method="post"
-                    action="/admin/edit-ruangan/<%= ruangan.idRuangan %>"
-                    enctype="multipart/form-data"
+                <form
+                method="post"
+                action="/admin/edit-ruangan/<%= ruangan.idRuangan %>"
+                enctype="multipart/form-data"
+              >
+                <div class="mb-4 sm:mb-8">
+                  <label
+                    for="namaRuangan"
+                    class="block mb-2 text-sm font-medium dark:text-black"
+                    >Nama Ruangan</label
                   >
-                    <div class="mb-4 sm:mb-8">
-                      <label
-                        for="namaRuangan"
-                        class="block mb-2 text-sm font-medium dark:text-black"
-                        >Nama Ruangan</label
-                      >
-                      <input
-                        name="namaRuangan"
-                        type="text"
-                        id="namaRuangan"
-                        class="py-3 px-4 block w-full border border-black rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-white:bg-neutral-900 dark:border-neutral-700 dark:text-black dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                        placeholder="<%= ruangan.namaRuangan %>"
-                      />
-                    </div>
-
-                    <div class="mb-4 sm:mb-8">
-                      <label
-                        for="lokasi"
-                        class="block mb-2 text-sm font-medium dark:text-black"
-                        >Lokasi Ruangan</label
-                      >
-                      <input
-                        name="lokasi"
-                        type="text"
-                        id="lokasi"
-                        class="py-3 px-4 block w-full border border-black rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-white:bg-neutral-900 dark:border-neutral-700 dark:text-black dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                        placeholder="<%= ruangan.lokasi %>"
-                      />
-                    </div>
-
-                    <div class="mb-4 sm:mb-8">
-                      <label
-                        for="kapasitas"
-                        class="block mb-2 text-sm font-medium dark:text-black"
-                        >Kapasitas Ruangan</label
-                      >
-                      <input
-                        name="kapasitas"
-                        type="text"
-                        id="kapasitas"
-                        class="py-3 px-4 block w-full border border-black rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-white:bg-neutral-900 dark:border-neutral-700 dark:text-black dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                        placeholder="<%= ruangan.kapasitas %>"
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        for="fasilitas"
-                        class="block mb-2 text-sm font-medium dark:text-black"
-                        >Fasilitas Ruangan</label
-                      >
-                      <div class="mt-1">
-                        <textarea
-                          name="fasilitas"
-                          id="fasilitas"
-                          rows="3"
-                          class="py-3 px-4 block w-full border border-black rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-white:bg-neutral-900 dark:border-neutral-700 dark:text-black dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                          placeholder="<%= ruangan.fasilitas %>"
-                        ></textarea>
-                      </div>
-                    </div>
-
-                    <div class="mb-4">
-                      <label
-                        for="file"
-                        class="block mb-2 text-sm font-medium dark:text-black"
-                        >Gambar Ruangan</label
-                      >
-                      <input
-                        type="file"
-                        name="foto"
-                        id="file"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      />
-                    </div>
+                  <input
+                    name="namaRuangan"
+                    type="text"
+                    id="namaRuangan"
+                    class="py-3 px-4 block w-full border border-black rounded-lg text-sm focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none bg-white:bg-neutral-900 dark:border-neutral-700 dark:text-black dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                    value="<%= ruangan.namaRuangan %>"
+                  />
+                </div>
+              
+                <div class="mb-4 sm:mb-8">
+                  <label
+                    for="lokasi"
+                    class="block mb-2 text-sm font-medium dark:text-black"
+                    >Lokasi Ruangan</label
+                  >
+                  <input
+                    name="lokasi"
+                    type="text"
+                    id="lokasi"
+                    class="py-3 px-4 block w-full border border-black rounded-lg text-sm focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none bg-white:bg-neutral-900 dark:border-neutral-700 dark:text-black dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                    value="<%= ruangan.lokasi %>"
+                  />
+                </div>
+              
+                <div class="mb-4 sm:mb-8">
+                  <label
+                    for="kapasitas"
+                    class="block mb-2 text-sm font-medium dark:text-black"
+                    >Kapasitas Ruangan</label
+                  >
+                  <input
+                    name="kapasitas"
+                    type="text"
+                    id="kapasitas"
+                    class="py-3 px-4 block w-full border border-black rounded-lg text-sm focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none bg-white:bg-neutral-900 dark:border-neutral-700 dark:text-black dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                    value="<%= ruangan.kapasitas %>"
+                  />
+                </div>
+              
+                <div>
+                  <label
+                    for="fasilitas"
+                    class="block mb-2 text-sm font-medium dark:text-black"
+                    >Fasilitas Ruangan</label
+                  >
+                  <div class="mt-1">
+                    <textarea
+                      name="fasilitas"
+                      id="fasilitas"
+                      rows="3"
+                      class="py-3 px-4 block w-full border border-black rounded-lg text-sm focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none bg-white:bg-neutral-900 dark:border-neutral-700 dark:text-black dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                    ><%= ruangan.fasilitas %></textarea>
+                  </div>
+                </div>
+              
+                <div class="mb-4">
+                  <label
+                    for="file"
+                    class="block mb-2 text-sm font-medium dark:text-black"
+                    >Gambar Ruangan</label
+                  >
+                  
+                  <!-- Pratinjau gambar -->
+                  <div class="flex flex-col items-center space-y-4">
                     <img
                       id="imagePreview"
-                      src="#"
+                      src="/uploads/ruangan/<%= ruangan.foto %>"
                       alt="Image Preview"
-                      style="display: none; max-width: 200px; max-height: 200px"
+                      class="w-32 h-32 object-cover border rounded-md"
+                      style="display: <%= ruangan.foto ? 'block' : 'none' %>;"
                     />
-                    <div class="mt-6 grid gap-4 grid-cols-2">
-                      <button
-                        type="submit"
-                        value="submit"
-                        class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                      >
-                        Simpan
-                      </button>
-                      <a
-                        href="/admin/daftar-ruangan"
-                        class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-gray-700 disabled:opacity-50 disabled:pointer-events-none"
-                        >Batal</a
-                      >
-                    </div>
-                  </form>
+                    <!-- Tombol edit -->
+                    <button
+                      type="button"
+                      id="editImageButton"
+                      class="py-2 px-4 text-sm font-medium text-white bg-[#0a2e3b] rounded-md hover:bg-[#1B6C89] focus:outline-none focus:ring focus:ring-blue-300"
+                    >
+                      Edit Gambar
+                    </button>
+                  </div>
+                  
+                  
+                  <!-- Input file (tersembunyi secara default) -->
+                  <input
+                    type="file"
+                    name="foto"
+                    id="file"
+                    class="mt-2 hidden shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    onchange="previewImage(event)"
+                  />
+                
+                  <!-- Input hidden untuk menyimpan nama file lama -->
+                  <input
+                    type="hidden"
+                    name="fotoLama"
+                    value="<%= ruangan.foto %>"
+                  />
+                </div>
+                <div class="mt-6 grid gap-4 grid-cols-2">
+                  <button
+                    type="submit"
+                    value="submit"
+                    class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-[#0a2e3b] text-white hover:bg-[#1B6C89] disabled:opacity-50 disabled:pointer-events-none"
+                  >
+                    Simpan
+                  </button>
+                  <a
+                    href="/admin/daftar-ruangan"
+                    class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-[#0a2e3b] text-white hover:bg-[#1B6C89] disabled:opacity-50 disabled:pointer-events-none"
+                    >Batal</a
+                  >
+                </div>
+              </form>
+              
                 </div>
               </div>
             </div>
@@ -188,13 +212,36 @@
   </div>
 </div>
 <script>
+  let isImageEdited = false;
+
+  // Ketika tombol edit gambar diklik
+  document.getElementById("editImageButton").addEventListener("click", function () {
+    // Tampilkan input file
+    document.getElementById("file").click();
+  });
+
+  // Ketika pengguna memilih file baru
   document.getElementById("file").addEventListener("change", function (event) {
-    var reader = new FileReader();
-    reader.onload = function (e) {
-      document.getElementById("imagePreview").src = e.target.result;
-      document.getElementById("imagePreview").style.display = "block";
-    };
-    reader.readAsDataURL(event.target.files[0]);
+    const fileInput = event.target.files[0];
+    const imagePreview = document.getElementById("imagePreview");
+
+    if (fileInput) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        imagePreview.src = e.target.result; // Perbarui pratinjau gambar
+        imagePreview.style.display = "block"; // Pastikan gambar terlihat
+        isImageEdited = true; // Tandai bahwa gambar telah diubah
+      };
+      reader.readAsDataURL(fileInput); // Baca file sebagai URL Data
+    }
+  });
+
+  // Sebelum submit form
+  document.querySelector("form").addEventListener("submit", function () {
+    // Jika gambar tidak diedit, kosongkan value input file
+    if (!isImageEdited) {
+      document.getElementById("file").removeAttribute("name");
+    }
   });
 </script>
 <%- include("./footer.ejs")%>

@@ -33,30 +33,14 @@ const riwayat = async (req, res, next) => {
         const peminjamans = await Peminjaman.findAll({
             where: { 
                 idPeminjam: userId,
-                [Op.or]: [
-                    { statusPengajuan: 'Ditolak' },
-                    {
-                        statusPengajuan: 'Disetujui',
-                        '$detailPeminjaman.tanggal$': { [Op.lt]: currentDateTime.split(' ')[0] },
-                        [Op.and]: [
-                            sequelize.where(
-                                sequelize.fn('CONCAT', 
-                                    sequelize.col('detailPeminjaman.tanggal'), 
-                                    ' ', 
-                                    sequelize.col('detailPeminjaman.jamSelesai')
-                                ),
-                                { [Op.lt]: currentDateTime }
-                            )
-                        ]
-                    }
-                ]
+        
             },
-            attributes: ['idPeminjaman', 'kegiatan', 'tanggalPengajuan', 'formulir', 'statusPengajuan', 'tanggalKeputusan'],
+            attributes: ['idPeminjaman', 'kegiatan', 'createdAt', 'formulir', 'statusPengajuan', 'tanggalKeputusan'],
             include: [
                 {
                     model: DetailPeminjaman,
                     as: 'detailPeminjaman',
-                    attributes: ['tanggal', 'jamMulai', 'jamSelesai'],
+                    attributes: ['tanggalMulai','tanggalSelesai', 'jamMulai', 'jamSelesai'],
                     include: [
                         {
                             model: Ruangan,
@@ -84,12 +68,12 @@ const downloadRiwayat = async (req, res, next) => {
 
         const peminjamans = await Peminjaman.findAll({
             where: { idPeminjam: userId },
-            attributes: ['idPeminjaman', 'kegiatan', 'tanggalPengajuan', 'formulir', 'statusPengajuan', 'tanggalKeputusan'],
+            attributes: ['idPeminjaman', 'kegiatan', 'createdAt', 'formulir', 'statusPengajuan', 'tanggalKeputusan'],
             include: [
                 {
                     model: DetailPeminjaman,
                     as: 'detailPeminjaman',
-                    attributes: ['tanggal', 'jamMulai', 'jamSelesai'],
+                    attributes: ['tanggalMulai','tanggalSelesai', 'jamMulai', 'jamSelesai'],
                     include: [
                         {
                             model: Ruangan,
@@ -105,8 +89,13 @@ const downloadRiwayat = async (req, res, next) => {
         const currentPage = 'riwayat';
         const html = await ejs.renderFile(templatePath, { currentPage, user, peminjamans });
     
+        const pdfOptions = {
+      format: 'A4',
+      orientation: 'landscape',
+      border: '10mm',
+    };
         const pdfPath = path.join(__dirname, '../public/downloads/riwayat/riwayat.pdf'); 
-        pdf.create(html).toFile(pdfPath, (err, result) => {
+        pdf.create(html, pdfOptions).toFile(pdfPath, (err, result) => {
           if (err) {
             return next(err);
           }

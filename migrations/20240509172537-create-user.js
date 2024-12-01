@@ -6,11 +6,11 @@ module.exports = {
       idUser: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4
+        type: Sequelize.INTEGER, 
+        autoIncrement: true    
       },
       idRole: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,  // Change to INTEGER for auto-increment
         references: {
           model: "Roles",
           key: "idRole"

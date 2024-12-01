@@ -7,10 +7,13 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      line-height: 1.6;
       margin: 20px;
     }
-    h1, h2, h3 {
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    h1 {
       margin-bottom: 10px;
     }
     table {
@@ -24,13 +27,9 @@
     th, td {
       padding: 8px;
       text-align: left;
-    }
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .section {
-      margin-bottom: 20px;
+      word-wrap: break-word;
+      max-width: 150px;
+      font-size: 12px;
     }
     .footer {
       margin-top: 20px;
@@ -45,13 +44,13 @@
     <p>Dibuat Pada Tanggal <%= new Date().toLocaleDateString() %></p>
   </div>
 
-  <div class="section">
+  <div>
     <h2>Pembuat Rekap</h2>
     <p><strong>Nama:</strong> <%= user.nama %> (<%= user.username %>)</p>
     <p><strong>No HP:</strong> <%= user.noHp %></p>
   </div>
 
-  <div class="section">
+  <div>
     <h2>Daftar Rekap Peminjaman</h2>
     <table>
       <thead>
@@ -72,9 +71,16 @@
           <tr>
             <td><%= counter++ %></td>
             <td><%= peminjaman.peminjam.nama %></td>
-            <td><%= peminjaman.detailPeminjaman.ruangan ? peminjaman.detailPeminjaman[0].ruangan.namaRuangan : 'Ruangan tidak tersedia' %></td>
-            <td><%= peminjaman.kegiatan %></td>
-            <td><%= new Date(peminjaman.tanggalPengajuan).toLocaleDateString() %></td>
+            <td>
+              <%= peminjaman.detailPeminjaman && peminjaman.detailPeminjaman[0] && peminjaman.detailPeminjaman[0].ruangan 
+                ? peminjaman.detailPeminjaman[0].ruangan.namaRuangan 
+                : 'Ruangan tidak tersedia' %>
+            </td>
+            <td><%= peminjaman.kegiatan.length > 50 
+                ? peminjaman.kegiatan.substring(0, 50) + '...' 
+                : peminjaman.kegiatan %>
+            </td>
+            <td><%= new Date(peminjaman.createdAt).toLocaleDateString() %></td>
             <td><%= new Date(peminjaman.tanggalKeputusan).toLocaleDateString() %></td>
             <td><%= peminjaman.statusPengajuan %></td>
             <td><%= peminjaman.admin ? peminjaman.admin.nama : 'Admin tidak tersedia' %></td>
@@ -85,7 +91,7 @@
   </div>
 
   <div class="footer">
-    <p>&copy; <%= new Date().getFullYear() %> SiMapan</p>
+    <p>&copy; <%= new Date().getFullYear() %> BookMySpace</p>
   </div>
 </body>
 </html>

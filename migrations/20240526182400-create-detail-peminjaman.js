@@ -5,7 +5,7 @@ module.exports = {
     await queryInterface.createTable('DetailPeminjamans', {
       idPeminjaman: {
         allowNull: false,
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,      
         references: {
           model: "Peminjamans",
           key: "idPeminjaman"
@@ -15,7 +15,7 @@ module.exports = {
       },
       idRuangan: {
         allowNull: false,
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,  // Change to INTEGER for auto-increment
         references: {
           model: "Ruangans",
           key: "idRuangan"

@@ -19,13 +19,18 @@
               </div>
 
               <div>
-                <div class="inline-flex gap-x-2">
-                    <a href="/admin/download-rekap" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                      <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-                      Download PDF
-                    </a>
-                </div>
-              </div>
+  <div class="inline-flex gap-x-2">
+    <a href="/admin/download-rekap" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-[#0a2e3b] text-white hover:bg-[#1B6C89] disabled:opacity-50 disabled:pointer-events-none">
+      <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 5v9" />
+        <path d="M8 13l4 4 4-4" />
+        <path d="M5 19h14" />
+      </svg>
+      Download PDF
+    </a>
+  </div>
+</div>
+
             </div>
             <div class="flex flex-col">
               <div class="-m-1.5 overflow-x-auto">
@@ -37,11 +42,9 @@
                           <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-black uppercase">No</th>
                           <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-black uppercase">Nama Peminajam</th>
                           <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-black uppercase">Nama Ruangan</th>
-                          <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-black uppercase">Formulir</th>
                           <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-black uppercase">Tanggal Pemakaian</th>
                           <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-black uppercase">Waktu Mulai</th>
                           <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-black uppercase">Waktu Selesai</th>
-                          <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-black uppercase">Kegiatan</th>
                           <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-black uppercase">Keputusan</th>
                           <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-black uppercase">Opsi</th>
                         </tr>
@@ -55,8 +58,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-black"><% peminjaman.detailPeminjaman.forEach((detail) => { %> <%=
                               detail.ruangan.namaRuangan %></td>
                               <% }); %>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-black"><a href="/uploads/formulir/<%= encodeURIComponent(peminjaman.formulir) %>" download="">Download Formulir</a></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-black"><% peminjaman.detailPeminjaman.forEach((detail) => { %><%= new Date(detail.tanggal).toLocaleDateString() %></td>
+                              <td class="px-6 py-4 whitespace-nowrap text-sm text-black"><% peminjaman.detailPeminjaman.forEach((detail) => { %><%= new Date(peminjaman.createdAt).toLocaleDateString() %></td>
                               <% }); %></td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-black"><% peminjaman.detailPeminjaman.forEach((detail) => { %> <%=
                               detail.jamMulai %></td>
@@ -64,10 +66,10 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-black"><% peminjaman.detailPeminjaman.forEach((detail) => { %> <%=
                               detail.jamSelesai%></td>
                               <% }); %></td>
-                              <td class="px-6 py-4 whitespace-nowrap text-sm text-black"><%= peminjaman.kegiatan.substring(0, 10) %></td>                            <td class="px-6 py-4 whitespace-nowrap text-sm text-black"><%= peminjaman.statusPengajuan %></td>
+                              <td class="px-6 py-4 whitespace-nowrap text-sm text-black"><%= peminjaman.statusPengajuan %></td>
                             <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex space-x-2"> 
                               <form action="/admin/detail-peminjaman/<%= peminjaman.idPeminjaman %>" method="get">
-                                <button type="submit" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-500 text-white hover:bg-blue-800 disabled:opacity-50 disabled:pointer-events-none">
+                                <button type="submit" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-[#0a2e3b] text-white hover:bg-[#1B6C89] disabled:opacity-50 disabled:pointer-events-none">
                                   Detail
                                 </button>
                               </form>
@@ -83,7 +85,17 @@
             <div class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
               <div>
                 <p class="text-sm text-gray-600">
-                  <span class="font-semibold text-gray-800">12</span> results
+                  <span class="font-semibold text-gray-800">
+                    <% 
+
+                    if (peminjamans.length === 0) {
+                      %> 0 <%
+                    } else {
+                      %> <%= peminjamans.length %> <%
+                    }
+                      
+                      %>
+                  </span> results
                 </p>
               </div>
 

@@ -12,8 +12,15 @@ router.get('/daftar-ruangan', authMiddleware, permissionUser("user"), ruangan.da
 router.get('/cari-ruangan', authMiddleware, permissionUser("user"), ruangan.cariRuangan);
 router.get('/detail-ruangan/:id', authMiddleware, permissionUser("user"), ruangan.detailRuangan);
 router.get('/template-surat', authMiddleware, permissionUser("user"), ruangan.templateSurat);
-router.get('/pinjam-ruangan/:idRuangan', authMiddleware, permissionUser("user"), peminjaman.formPinjamRuangan);
-router.post('/pinjam-ruangan/:idRuangan', authMiddleware, permissionUser("user"), upload.single('formulir'), peminjaman.pinjamRuangan);
+router.get('/pinjam-ruangan/:id', authMiddleware, permissionUser("user"), (req, res, next) => {
+    const id = req.params.id;
+    if (!/^\d+$/.test(id)) { // Hanya izinkan angka
+      return next(createError(400, "Invalid ID"));
+    }
+    peminjaman.formPinjamRuangan(req, res, next);
+  });
+  
+router.post('/pinjam-ruangan/:id', authMiddleware, permissionUser("user"), upload.single('formulir'), peminjaman.pinjamRuangan);
 router.get('/data-peminjaman', authMiddleware, permissionUser("user"), peminjaman.dataPeminjaman);
 router.get('/detail-peminjaman/:idPeminjaman', authMiddleware, permissionUser("user"), peminjaman.detailPeminjaman);
 router.post('/batal-peminjaman/:idPeminjaman', authMiddleware, permissionUser("user"), peminjaman.batalPeminjaman);

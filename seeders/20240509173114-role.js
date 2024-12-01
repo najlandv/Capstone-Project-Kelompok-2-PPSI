@@ -15,11 +15,9 @@ module.exports = {
     */
     return queryInterface.bulkInsert('Roles', [
       {
-        idRole: v4(),
         namaRole: 'user',
       },
       {
-        idRole: v4(),
         namaRole: 'admin',
       }
     ]);

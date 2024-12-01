@@ -25,11 +25,6 @@ app.use(express.static(path.join(__dirname, "src")))
 app.use(methodOverride('_method'));
 
 
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).render('error'); 
-});
-
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -45,9 +40,10 @@ app.use('/auth', AuthRouter)
 
 
 
-const port = process.env.PORT
+const port = process.env.PORT || 3004;
+
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
+    console.log(`listening at http://localhost:${port}`);
 });
 
 
@@ -56,15 +52,5 @@ app.use(function (req, res, next) {
 });
 
 
-app.use(function (err, req, res, next) {
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-    res.status(err.status || 500);
-    res.render('error', { 
-        message: err.message, 
-        status: err.status 
-      });
-});
 
 module.exports = app;

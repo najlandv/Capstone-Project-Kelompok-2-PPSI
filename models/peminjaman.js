@@ -1,6 +1,7 @@
 'use strict';
 const {
-  Model
+  Model,
+  INTEGER
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Peminjaman extends Model {
@@ -16,12 +17,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   Peminjaman.init({
     idPeminjaman: {
-      type: DataTypes.UUID,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
+      type: INTEGER, 
+      autoIncrement: true,
     },
     idPeminjam: {
-      type: DataTypes.UUID,
+      type: INTEGER, 
       allowNull: false,
       references: {
         model: 'Users',
@@ -29,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     idAdmin: {
-      type: DataTypes.UUID,
+      type: INTEGER, 
       allowNull: true,
       references: {
         model: 'Users',
@@ -40,10 +41,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    tanggalPengajuan: {
+    tanggalMulai: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
+    },
+    tanggalSelesai: {
+      type: DataTypes.DATE,
+      allowNull: false,
     },
     formulir: {
       type: DataTypes.STRING,

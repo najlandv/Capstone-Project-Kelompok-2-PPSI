@@ -1,6 +1,7 @@
 'use strict';
 const {
-  Model
+  Model,
+  INTEGER
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Notifikasi extends Model {
@@ -15,12 +16,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   Notifikasi.init({
     idNotifikasi: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: INTEGER, 
+      autoIncrement: true,
       primaryKey: true,
     },
     idUser: {
-      type: DataTypes.UUID,
+      type: INTEGER, 
       allowNull: false,
     },
     message: {

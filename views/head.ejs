@@ -8,9 +8,9 @@
     <link href="/css/output.css" rel="stylesheet">
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css' rel='stylesheet' />
   </head>
-<body>
-<header class="sticky flex flex-wrap sm:justify-start sm:flex-nowrap z-50 w-full bg-blue-800 border-b border-gray-200 text-sm py-3 sm:py-0">
-  <nav class="bg-blue-800 relative max-w-[85rem] py-4 w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8" aria-label="Global">
+  <body background="/images/back.png">
+<header class="sticky flex flex-wrap sm:justify-start sm:flex-nowrap z-50 w-full bg-[#0a2e3b] border-b border-gray-200 text-sm py-3 sm:py-0">
+  <nav class="bg-[#0a2e3b] relative max-w-[85rem] py-4 w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8" aria-label="Global">
     <div class="flex items-center justify-between px-10">
       <a class="flex-none text-2xl text-white font-bold" href="/" aria-label="Ruang Pinjam">SiMapan</a>
       <div class="sm:hidden">
@@ -23,8 +23,11 @@
     <div id="navbar-collapse-with-animation" class="ml-5 hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:block">
       <div class="flex flex-col gap-y-4 gap-x-0 mt-5 sm:flex-row sm:items-center sm:gap-y-0 sm:gap-x-7 sm:mt-0 sm:ps-7">
         <div class="flex items-center gap-x-2 sm:ms-auto">
-          <a  class="py-3 px-6 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none" href="/auth/login">
+          <a class="py-3 px-6 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-white text-[#0a2e3b] hover:bg-[#1B6C89] hover:text-white disabled:opacity-50 disabled:pointer-events-none" href="/auth/login">
             Login
+          </a>
+          <a  class="py-3 px-6 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-white text-[#0a2e3b] hover:bg-[#1B6C89] hover:text-white disabled:opacity-50 disabled:pointer-events-none" href="/auth/register">
+            Register
           </a>
         </div>
       </div>
@@ -34,13 +37,13 @@
 <nav class="-top-px bg-white text-sm font-medium text-black ring-1 ring-gray-900 ring-opacity-5 border-t shadow-sm shadow-gray-100 pt-6 md:pb-6 -mt-px" aria-label="Jump links">
   <div class="max-w-7xl snap-x w-full flex items-center overflow-x-auto px-4 sm:px-6 lg:px-8 pb-4 md:pb-0 mx-auto [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300">
     <div class="snap-center shrink-0 pe-5 sm:pe-8 sm:last-pe-0">
-        <a class="inline-flex items-center gap-x-2 hover:text-gray-500 <%= activePage === 'dashboard' ? 'text-blue-800 underline font-bold' : '' %>" href="/">Dashboard</a>
+        <a class="inline-flex items-center gap-x-2 hover:text-gray-500 <%= activePage === 'dashboard' ? 'text-[#0a2e3b] underline font-bold' : '' %>" href="/">Dashboard</a>
     </div>
     <div class="snap-center shrink-0 pe-5 sm:pe-8 sm:last:pe-0">
-        <a class="inline-flex items-center gap-x-2 hover:text-gray-500 <%= activePage === 'daftar-ruangan' ? 'text-blue-800 underline font-bold' : '' %>" href="/daftar-ruangan">Daftar Ruangan</a>
+        <a class="inline-flex items-center gap-x-2 hover:text-gray-500 <%= activePage === 'daftar-ruangan' ? 'text-[#0a2e3b] underline font-bold' : '' %>" href="/daftar-ruangan">Daftar Ruangan</a>
     </div>
     <div class="snap-center shrink-0 pe-5 sm:pe-8 sm:last:pe-0">
-        <a class="inline-flex items-center gap-x-2 hover:text-gray-500 <%= activePage === 'peminjaman' ? 'text-blue-800 underline font-bold' : '' %>" href="/pinjam-ruangan">Peminjaman</a>
+        <a class="inline-flex items-center gap-x-2 hover:text-gray-500 <%= activePage === 'peminjaman' ? 'text-[#0a2e3b] underline font-bold' : '' %>" href="/pinjam-ruangan">Peminjaman</a>
     </div>
   </div>
 </nav>

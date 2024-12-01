@@ -11,44 +11,96 @@ const pusher = require('../utils/pusherConfig');
 const ejs = require('ejs');
 const pdf = require('html-pdf');
 const schedule = require('node-schedule');
+const { log } = require('console');
+
 
 const formPinjamRuangan = async (req, res, next) => {
   try {
-      let user = null;
-      if (req.user) {
-        const userId = req.user.idUser;
-        user = await User.findOne({ where: { idUser: userId } });
-      }
-      const idRuangan = req.params.idRuangan;
-      const ruangans = await Ruangan.findAll();
-      const selectedRuangan = ruangans.find(ruangan => ruangan.idRuangan === idRuangan);
+    let user = null;
+    if (req.user) {
+      const userId = req.user.idUser;
+      user = await User.findOne({ where: { idUser: userId } });
+    }
 
-      let ruangan;
-      if (idRuangan) {
-          ruangan = await Ruangan.findOne({ where: { idRuangan: idRuangan } });
-      }
+    const id = req.params.id;
+    let ruangan;
+    if (id) {
+      ruangan = await Ruangan.findOne({ where: { idRuangan: id } });
+    }
 
-      if (idRuangan && !ruangan) {
-          res.status(404).json({ message: 'Ruangan not found' });
-      } else {
-        if(user) {
-          res.render('user/pinjam-ruangan', { activePage: 'daftar-ruangan', user, ruangan, ruangans, selectedRuangan })
-        } else {
-          // res.render('pinjam-ruangan', { activePage: 'peminjaman', ruangan, ruangans, selectedRuangan });
-          return res.redirect('/auth/login');
-        }
-      }
+    if (!id || !ruangan) {
+        return res.redirect('auth/login');
+    }
 
+    if (user) {
+      // Ambil tanggal yang sudah dibooking
+      const bookedDates = await DetailPeminjaman.findAll({
+        where: { idRuangan: id },
+        attributes: ['tanggalMulai', 'tanggalSelesai'], // Pastikan field sesuai dengan database
+      });
+
+      const formattedDates = bookedDates.map((booking) => ({
+        start: booking.tanggalMulai,
+        end: booking.tanggalSelesai,
+      }));
+
+      // Fetch the list of current bookings for the room
+      const peminjamanList = await DetailPeminjaman.findAll({
+        where: { idRuangan: id },
+        order: [['tanggalMulai', 'ASC']], // Order by start date
+      });
+
+      const message = req.cookies.message ? JSON.parse(req.cookies.message) : null;
+
+      res.cookie('message', '', { maxAge: 1000, httpOnly: true });
+
+      res.render('user/pinjam-ruangan', {
+        activePage: 'daftar-ruangan',
+        user,
+        ruangan,
+        message,
+        formattedDates: JSON.stringify(formattedDates), // Kirim data ke frontend
+        peminjamanList, // Send the list of bookings to the view
+      });
+    } else {
+      return res.redirect('/auth/login');
+    }
   } catch (error) {
-      next(error);
+    next(error);
   }
-}
+};
+
 
 const pinjamRuangan = async (req, res, next) => {
   try {
       const user = req.user.idUser;
-      const { namaRuangan, kegiatan, tanggal, waktuMulai, waktuSelesai } = req.body;
-      const idRuangan = req.params.idRuangan || namaRuangan;
+      const { namaRuangan, kegiatan, tanggalMulai,tanggalSelesai, waktuMulai, waktuSelesai } = req.body;
+      const idRuangan = req.params.id;
+
+      if ( !kegiatan || !tanggalMulai  || !tanggalSelesai || !waktuMulai || !waktuSelesai) {
+        res.cookie('message', JSON.stringify({ type: 'error', text: 'Semua field wajib diisi' }), { maxAge: 60000 });
+        return res.redirect('/user/pinjam-ruangan/' + idRuangan);
+    }
+    
+
+    const existingBooking = await DetailPeminjaman.findOne({
+      where: {
+        idRuangan,
+        [Op.or]: [
+          {
+            tanggalMulai: { [Op.between]: [tanggalMulai, tanggalSelesai] },
+          },
+          {
+            tanggalSelesai: { [Op.between]: [tanggalMulai, tanggalSelesai] },
+          },
+        ],
+      },
+    });
+
+    if (existingBooking) {
+      res.cookie('message', JSON.stringify({ type: 'error', text: 'Tanggal sudah dibooking' }), { maxAge: 60000 });
+      return res.redirect('/user/pinjam-ruangan/' + idRuangan);    }
+
 
       const idPeminjam = await User.findOne({ where: { idUser: user } });
 
@@ -59,23 +111,25 @@ const pinjamRuangan = async (req, res, next) => {
       const ruangan = await Ruangan.findOne({ where: { idRuangan: idRuangan } });
 
       if (!ruangan) {
-          return res.status(404).json({ message: 'Ruangan not found' });
+          return res.redirect('auth/login');
       }
 
+      
       const formulir = req.file ? req.file.filename : null;
       const pdfFileName = formulir;
       const pathPDFFile = `uploads/formulir/${pdfFileName}`;
       
+      
       const statusPengajuan = 'Menunggu';
-
-      let tanggalPengajuan = new Date().toLocaleDateString();
 
 
       const newPeminjaman = await Peminjaman.create({
           idPeminjam: idPeminjam.idUser,
+          idAdmin: 1,
           kegiatan,
           formulir,
-          tanggalPengajuan,
+          tanggalMulai,
+          tanggalSelesai,
           statusPengajuan,
           tanggalKeputusan: null,
           alasanPenolakan: null
@@ -84,13 +138,15 @@ const pinjamRuangan = async (req, res, next) => {
       const newDetailPeminjaman = await DetailPeminjaman.create({
           idPeminjaman: newPeminjaman.idPeminjaman,
           idRuangan: ruangan.idRuangan,
-          tanggal,
+          tanggalMulai,
+          tanggalSelesai,
           jamMulai: waktuMulai,
           jamSelesai: waktuSelesai
       });
 
       return res.redirect('/user/daftar-ruangan')
   } catch (error) {
+      console.log(error,">>>>>>>>>>>>>>>>>>>>")
       next(error);
   }
 };
@@ -109,13 +165,13 @@ const dataPeminjaman = async (req, res, next) => {
           {
             statusPengajuan: 'Disetujui',
             [Op.or]: [
-              { '$detailPeminjaman.tanggal$': { [Op.gt]: currentDateTime.split(' ')[0] } },
+              { '$detailPeminjaman.tanggalMulai$': { [Op.gt]: currentDateTime.split(' ')[0] } },
               {
-                '$detailPeminjaman.tanggal$': currentDateTime.split(' ')[0],
+                '$detailPeminjaman.tanggalMulai$': currentDateTime.split(' ')[0],
                 [Op.and]: [
                   sequelize.where(
                     sequelize.fn('CONCAT', 
-                      sequelize.col('detailPeminjaman.tanggal'), 
+                      sequelize.col('detailPeminjaman.tanggalMulai'), 
                       ' ', 
                       sequelize.col('detailPeminjaman.jamSelesai')
                     ),
@@ -132,7 +188,7 @@ const dataPeminjaman = async (req, res, next) => {
         {
           model: DetailPeminjaman,
           as: 'detailPeminjaman',
-          attributes: ['tanggal', 'jamMulai', 'jamSelesai'],
+          attributes: ['tanggalMulai','tanggalSelesai', 'jamMulai', 'jamSelesai'],
           include: [
             {
               model: Ruangan,
@@ -156,9 +212,11 @@ const detailPeminjaman = async (req, res, next) => {
     const idPeminjaman = req.params.idPeminjaman;
 
     const user = await User.findOne({ where: { idUser: userId } });
+    
+    console.log(user,">>>>>>>>>user")
 
     const peminjaman = await Peminjaman.findOne({where: {idPeminjaman},
-      attributes: ['idPeminjaman', 'kegiatan', 'statusPengajuan', 'tanggalPengajuan', 'formulir'],
+      attributes: ['idPeminjaman', 'kegiatan', 'statusPengajuan', 'tanggalMulai','tanggalSelesai', 'formulir','createdAt'],
       include: [
       {
         model: User,
@@ -173,7 +231,7 @@ const detailPeminjaman = async (req, res, next) => {
       {
         model: DetailPeminjaman,
         as: 'detailPeminjaman',
-        attributes: ['tanggal', 'jamMulai', 'jamSelesai'],
+        attributes: ['tanggalMulai','tanggalSelesai', 'jamMulai', 'jamSelesai'],
         include: [
           {
             model: Ruangan,
@@ -188,6 +246,7 @@ const detailPeminjaman = async (req, res, next) => {
   const adminRoleId = await Role.findOne({ where: { namaRole: 'admin' } }).then(role => role.idRole);
   const userRoleId = await Role.findOne({ where: { namaRole: 'user' } }).then(role => role.idRole);
   
+  console.log(peminjaman,">>>>>>>>>>>>>>>>>>>>>>>>");
   if(user.idRole === userRoleId) {
       res.render('user/detail-peminjaman', { activePage:'data-peminjaman', user, peminjaman });
   } else if(user.idRole === adminRoleId) {
@@ -275,7 +334,8 @@ const approvePeminjaman = async (req, res, next) => {
       id: peminjaman.idPeminjaman,
       nama: peminjaman.peminjam.nama,
       acara: peminjaman.kegiatan,
-      tanggal: new Date(peminjaman.detailPeminjaman[0].tanggal).toLocaleDateString(),
+      tanggalMulai: new Date(peminjaman.detailPeminjaman[0].tanggalMulai).toLocaleDateString(),
+      tanggalSelesai: new Date(peminjaman.detailPeminjaman[0].tanggalSelesai).toLocaleDateString(),
       ruangan: peminjaman.detailPeminjaman[0].ruangan.namaRuangan,
       jamMulai: peminjaman.detailPeminjaman[0].jamMulai,
       jamSelesai: peminjaman.detailPeminjaman[0].jamSelesai,
@@ -338,9 +398,10 @@ const approvePeminjaman = async (req, res, next) => {
       );
 
       const jamSelesai = peminjaman.detailPeminjaman[0].jamSelesai;
-      const tanggal = peminjaman.detailPeminjaman[0].tanggal;
+      const tanggalMulai = peminjaman.detailPeminjaman[0].tanggalMulai;
+      const tanggalSelesai = peminjaman.detailPeminjaman[0].tanggalSelesai;
 
-      const endDateTime = new Date(tanggal + ' ' + jamSelesai);
+      const endDateTime = new Date(tanggalSelesai + ' ' + jamSelesai);
 
             schedule.scheduleJob(endDateTime, async function() {
               const detailPeminjaman = await DetailPeminjaman.findOne({ where: { idPeminjaman } });
@@ -372,7 +433,7 @@ const daftarPeminjaman = async (req, res, next) => {
 
     const peminjamans = await Peminjaman.findAll({
       where: {statusPengajuan: 'Menunggu'},
-      attributes: ['idPeminjaman', 'kegiatan', 'tanggalPengajuan', 'formulir'],
+      attributes: ['idPeminjaman', 'kegiatan', 'tanggalMulai','tanggalSelesai', 'formulir'],
       include: [
       {
         model: User,
@@ -387,7 +448,7 @@ const daftarPeminjaman = async (req, res, next) => {
       {
         model: DetailPeminjaman,
         as: 'detailPeminjaman',
-        attributes: ['tanggal', 'jamMulai', 'jamSelesai'],
+        attributes: ['tanggalMulai','tanggalSelesai', 'jamMulai', 'jamSelesai'],
         include: [
           {
             model: Ruangan,
@@ -410,7 +471,7 @@ const tolakPeminjamanForm = async (req, res, next) => {
     const user = await User.findOne({ where: { idUser: userId } });
     const idPeminjaman = req.params.idPeminjaman;
 
-    res.render('admin/tolakPeminjaman', { currentPage: 'peminjaman', user, idPeminjaman });
+    res.render('admin/tolakpeminjaman', { currentPage: 'peminjaman', user, idPeminjaman });
   } catch (err) {
     next(err);
   }
@@ -461,7 +522,7 @@ const rekapPeminjaman = async (req, res, next) => {
 
         const peminjamans = await Peminjaman.findAll({
           where: {statusPengajuan: {[Op.not]: 'Menunggu'}},
-          attributes: ['idPeminjaman', 'kegiatan', 'tanggalPengajuan', 'formulir', 'statusPengajuan'],
+          attributes: ['idPeminjaman', 'kegiatan', 'tanggalMulai','tanggalSelesai', 'formulir', 'statusPengajuan','createdAt'],
           include: [
           {
             model: User,
@@ -476,7 +537,7 @@ const rekapPeminjaman = async (req, res, next) => {
           {
             model: DetailPeminjaman,
             as: 'detailPeminjaman',
-            attributes: ['tanggal', 'jamMulai', 'jamSelesai'],
+            attributes: ['tanggalMulai','tanggalSelesai', 'jamMulai', 'jamSelesai'],
             include: [
               {
                 model: Ruangan,
@@ -493,14 +554,25 @@ const rekapPeminjaman = async (req, res, next) => {
   }
  };
 
+
+
 const downloadRekap = async (req, res, next) => {
   try {
-    const userId = req.user.idUser; 
+    const userId = req.user.idUser;
     const user = await User.findOne({ where: { idUser: userId } });
 
     const peminjamans = await Peminjaman.findAll({
       where: { statusPengajuan: { [Op.not]: 'Menunggu' } },
-      attributes: ['idPeminjaman', 'kegiatan', 'tanggalPengajuan', 'tanggalKeputusan', 'formulir', 'statusPengajuan'],
+      attributes: [
+        'idPeminjaman',
+        'kegiatan',
+        'tanggalMulai',
+        'tanggalSelesai',
+        'tanggalKeputusan',
+        'formulir',
+        'statusPengajuan',
+        'createdAt',
+      ],
       include: [
         {
           model: User,
@@ -515,7 +587,7 @@ const downloadRekap = async (req, res, next) => {
         {
           model: DetailPeminjaman,
           as: 'detailPeminjaman',
-          attributes: ['tanggal', 'jamMulai', 'jamSelesai'],
+          attributes: ['tanggalMulai', 'tanggalSelesai', 'jamMulai', 'jamSelesai'],
           include: [
             {
               model: Ruangan,
@@ -527,13 +599,17 @@ const downloadRekap = async (req, res, next) => {
       ],
     });
 
-    const currentPage = 'rekap';
-
     const templatePath = path.join(__dirname, '../views/admin/template-rekap.ejs');
-    const html = await ejs.renderFile(templatePath, { currentPage, user, peminjamans });
+    const html = await ejs.renderFile(templatePath, { user, peminjamans });
+
+    const pdfOptions = {
+      format: 'A4',
+      orientation: 'landscape',
+      border: '10mm',
+    };
 
     const pdfPath = path.join(__dirname, '../public/downloads/rekap.pdf');
-    pdf.create(html).toFile(pdfPath, (err, result) => {
+    pdf.create(html, pdfOptions).toFile(pdfPath, (err, result) => {
       if (err) {
         return next(err);
       }
@@ -543,6 +619,7 @@ const downloadRekap = async (req, res, next) => {
     next(error);
   }
 };
+
  
 const downloadSurat = async (req, res, next) => {
   

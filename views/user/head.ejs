@@ -6,12 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User</title>
     <link rel="stylesheet" href="/css/output.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css' rel='stylesheet' />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body class="bg-gray-200">
-    <header class="flex flex-wrap sm:justify-start sm:flex-nowrap z-50 w-full bg-blue-800 border-b border-gray-700 text-sm py-2.5 sm:py-4">
-        <nav class="bg-blue-800  max-w-7xl flex basis-full items-center w-full mx-auto px-4 sm:px-6 lg:px-8" aria-label="Global">
+    <header class="flex flex-wrap sm:justify-start sm:flex-nowrap z-50 w-full bg-[#0a2e3b] border-b border-gray-700 text-sm py-2.5 sm:py-4">
+        <nav class="bg-[#0a2e3b]  max-w-7xl flex basis-full items-center w-full mx-auto px-4 sm:px-6 lg:px-8" aria-label="Global">
+            <img class="w-[38px] h-[38px] rounded-full" style="height: 64px;width: fit-content;" src="/images/LOGO-SIMAPAN.png" alt="Ruang Pinjam">
+
             <div class="me-5 md:me-8">
                 <a class="flex-none text-2xl text-white font-bold" href="/" aria-label="Ruang Pinjam">SiMapan</a>
             </div>
@@ -40,16 +45,16 @@
                             <p class="text-sm font-medium text-gray-800"><%= user.nama %></p>
                         </div> 
                         <div class="mt-2 py-2 first:pt-0 last:pb-0">
-                            <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500" href="/user/profile">
+                            <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-green-500" href="/user/profile">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                                 Profile
                             </a>
-                            <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500" href="/user/riwayat">
+                            <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-green-500" href="/user/riwayat">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
                                 Riwayat
                             </a>
                             <form action="/auth/logout" method="POST">
-                                <button type="submit" class="flex items-center gap-x-3.5 py-2 px-3 w-full rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500" href="#">
+                                <button type="submit" class="flex items-center gap-x-3.5 py-2 px-3 w-full rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-green-500" href="#">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>                               
                                 Logout
                                 </button>
@@ -63,13 +68,13 @@
     <nav class="-top-px bg-white text-sm font-medium text-black ring-1 ring-gray-900 ring-opacity-5 border-t shadow-sm shadow-gray-100 pt-6 md:pb-6 -mt-px" aria-label="Jump links">
         <div class="max-w-7xl snap-x w-full flex items-center overflow-x-auto px-4 sm:px-6 lg:px-8 pb-4 md:pb-0 mx-auto [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300">
             <div class="snap-center shrink-0 pe-5 sm:pe-8 sm:last-pe-0">
-                <a class="inline-flex items-center gap-x-2 hover:text-gray-500 <%= typeof activePage !== 'undefined' && activePage === 'dashboard' ? 'text-blue-800 underline font-bold' : '' %>" href="/">Dashboard</a>
+                <a class="inline-flex items-center gap-x-2 hover:text-gray-500 <%= typeof activePage !== 'undefined' && activePage === 'dashboard' ? 'text-[#0a2e3b] underline font-bold' : '' %>" href="/">Dashboard</a>
             </div>
             <div class="snap-center shrink-0 pe-5 sm:pe-8 sm:last:pe-0">
-                <a class="inline-flex items-center gap-x-2 hover:text-gray-500 <%= typeof activePage !== 'undefined' && activePage === 'daftar-ruangan' ? 'text-blue-800 underline font-bold' : '' %>" href="/user/daftar-ruangan">Daftar Ruangan</a>
+                <a class="inline-flex items-center gap-x-2 hover:text-gray-500 <%= typeof activePage !== 'undefined' && activePage === 'daftar-ruangan' ? 'text-[#0a2e3b] underline font-bold' : '' %>" href="/user/daftar-ruangan">Daftar Ruangan</a>
             </div>
             <div class="snap-center shrink-0 pe-5 sm:pe-8 sm:last:pe-0">
-                <a class="inline-flex items-center gap-x-2 hover:text-gray-500 <%= typeof activePage !== 'undefined' && activePage === 'data-peminjaman' ? 'text-blue-800 underline font-bold' : '' %>" href="/user/data-peminjaman">Peminjaman</a>
+                <a class="inline-flex items-center gap-x-2 hover:text-gray-500 <%= typeof activePage !== 'undefined' && activePage === 'data-peminjaman' ? 'text-[#0a2e3b] underline font-bold' : '' %>" href="/user/data-peminjaman">Peminjaman</a>
             </div>
         </div>
     </nav>

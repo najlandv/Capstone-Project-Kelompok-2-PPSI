@@ -6,12 +6,12 @@ module.exports = {
       idPeminjaman: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4
+        type: Sequelize.INTEGER,  // Change to INTEGER for auto-increment
+        autoIncrement: true    
       },
       idPeminjam: {
         allowNull: false,
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,  // Change to INTEGER for auto-increment
         references: {
           model: "Users",
           key: "idUser"
@@ -21,7 +21,7 @@ module.exports = {
       },
       idAdmin: {
         allowNull: true,
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,  // Change to INTEGER for auto-increment
         references: {
           model: "Users",
           key: "idUser"
@@ -37,6 +37,10 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.NOW
+      },
+      tanggalSelesai: {
+        type: Sequelize.DATE,
+        allowNull: false
       },
       formulir: {
         type: Sequelize.STRING,

@@ -57,6 +57,7 @@ const isLogin = async (req, res, next) => {
         const adminRoleId = await Role.findOne({ where: { namaRole: 'admin' } }).then(role => role.idRole);
         const userRoleId = await Role.findOne({ where: { namaRole: 'user' } }).then(role => role.idRole);
 
+        
         if (currentUser.idRole === adminRoleId) {
             return res.redirect('/admin/dashboard');
         } else if (currentUser.idRole === userRoleId) {
